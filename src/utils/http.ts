@@ -43,10 +43,17 @@ export const http = async (
     });
 };
 
+// JS 中的typeof, 是在runtime时运行的
+// return typeof 1 === 'number'
+
+// TS 中的typeof, 是在静态环境运行的
+// return (...[endpoint, config]: Parameters<typeof http>) =>
+
 export const useHttp = () => {
   const { user } = useAuth();
   // return ([endpoint, config]: [string, Config])=>http(endpoint, {...config, token: user?.token})
-  // 使用TS 操作符
+  // 使用TS Utility Types
+  // utility type 的用法： 用泛型给它传入一个其它类型， 然后utility type对这个类型进行某种操作
   return (...[endpoint, config]: Parameters<typeof http>) =>
     http(endpoint, { ...config, token: user?.token });
 };
