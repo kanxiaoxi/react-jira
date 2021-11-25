@@ -1,4 +1,5 @@
-import { Input, Select } from "antd";
+/** @jsxImportSource @emotion/react */
+import { Input, Select, Form } from "antd";
 
 export interface User {
   id: string;
@@ -19,23 +20,28 @@ interface SeachPanelProps {
 }
 export const SearchPanel = ({ users, param, setParam }: SeachPanelProps) => {
   return (
-    <form>
-      {/* setParam(Object.assign({},param, {name: e.target.value })) */}
-      <Input
-        value={param.name}
-        onChange={(e) => setParam({ ...param, name: e.target.value })}
-      />
-      <Select
-        value={param.personId}
-        onChange={(value) => setParam({ ...param, personId: value })}
-      >
-        <Select.Option value={""}>负责人</Select.Option>
-        {users.map((user) => (
-          <Select.Option key={user.id} value={user.id}>
-            {user.name}
-          </Select.Option>
-        ))}
-      </Select>
-    </form>
+    <Form css={{ marginBottom: "2rem", ">*": "" }} layout={"inline"}>
+      <Form.Item>
+        <Input
+          placeholder="项目名"
+          type="text"
+          value={param.name}
+          onChange={(e) => setParam({ ...param, name: e.target.value })}
+        />
+      </Form.Item>
+      <Form.Item>
+        <Select
+          value={param.personId}
+          onChange={(value) => setParam({ ...param, personId: value })}
+        >
+          <Select.Option value={""}>负责人</Select.Option>
+          {users.map((user) => (
+            <Select.Option key={user.id} value={user.id}>
+              {user.name}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
+    </Form>
   );
 };
