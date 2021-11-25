@@ -5,6 +5,7 @@ import { List } from "./list";
 import { SearchPanel } from "./search-panel";
 import { useHttp } from "utils/http";
 import styled from "@emotion/styled";
+import { Typography } from "antd";
 // const apiUrl = process.env.REACT_APP_API_URL;
 
 export const ProjectListScreen = () => {
@@ -13,13 +14,21 @@ export const ProjectListScreen = () => {
     name: "",
     personId: "",
   });
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<null | Error>(null);
   const [list, setList] = useState([]);
   const debouncedParam = useDebounce(param, 200);
   const client = useHttp();
 
   useEffect(() => {
-    client("projects", { data: cleanObject(debouncedParam) }).then(setList);
+    setIsLoading(true);
+    client("projects", { data: cleanObject(debouncedParam) })
+      .then(setList)
+      .catch((error) => {
+        setError(error);
+        setList([]);
+      })
+      .finally(() => setIsLoading(false));
     // ${apiUrl}/projects?name=${param.name}&personId={param.personId}
     // fetch(
     //   `${apiUrl}/projects?${qs.stringify(cleanObject(debouncedParam))}`
@@ -44,7 +53,10 @@ export const ProjectListScreen = () => {
     <Container>
       <h1>项目列表</h1>
       <SearchPanel users={users} param={param} setParam={setParam} />
-      <List users={users} list={list} />
+      {error ? (
+        <Typography.Text type={"danger"}>{error.message}</Typography.Text>
+      ) : null}
+      <List users={users} dataSource={list} loading={isLoading} />
     </Container>
   );
 };
