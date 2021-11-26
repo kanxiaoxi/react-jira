@@ -6,6 +6,7 @@ import styled from "@emotion/styled";
 import logo from "assets/logo.svg";
 import left from "assets/left.svg";
 import right from "assets/right.svg";
+import { useDocumentTitle } from "utils";
 
 export const UnauthenticatedApp = () => {
   const [isRegister, setIsRegister] = useState(false);
@@ -13,6 +14,9 @@ export const UnauthenticatedApp = () => {
   useEffect(() => {
     setError(null);
   }, []);
+
+  useDocumentTitle("请登录注册以继续");
+
   return (
     <Container>
       <Header />

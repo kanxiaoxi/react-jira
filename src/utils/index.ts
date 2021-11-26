@@ -81,3 +81,23 @@ export const useDebounce = <V>(value: V, delay?: number) => {
 };
 
 // 不需要用到别的hook就能搞定的，写个函数就可以了，比如上面的cleanObject()。
+
+export const useDocumentTitle = (
+  title: string,
+  keepOnUnmount: boolean = true
+) => {
+  const oldTitle = document.title;
+
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+
+  useEffect(() => {
+    return () => {
+      if (!keepOnUnmount) {
+        document.title = oldTitle;
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+};
