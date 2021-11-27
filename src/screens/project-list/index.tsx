@@ -1,4 +1,3 @@
-import { useState } from "react";
 // import * as qs from "qs";
 import { useDebounce, useDocumentTitle } from "utils";
 import { List } from "./list";
@@ -7,13 +6,13 @@ import styled from "@emotion/styled";
 import { Typography } from "antd";
 import { useProjects } from "utils/project";
 import { useUsers } from "utils/user";
+import { useUrlQueryParam } from "utils/url";
 
 export const ProjectListScreen = () => {
-  const [param, setParam] = useState({
-    name: "",
-    personId: "",
-  });
+  // 基本类型，组件状态可以放到依赖里，非组件状态的对象，绝不可以放到依赖里
 
+  // const [keys, setKeys] = useState<("name" | "personId")[]>(['name', 'personId'])
+  const [param, setParam] = useUrlQueryParam(["name", "personId"]);
   const debouncedParam = useDebounce(param, 200);
 
   const { isLoading, error, data: list } = useProjects(debouncedParam);
@@ -36,3 +35,9 @@ export const ProjectListScreen = () => {
 const Container = styled.div`
   padding: 3.2rem;
 `;
+
+ProjectListScreen.whyDidYouRender = false;
+
+// class Test extends React.Component<any, any> {
+//   static whyDidYouRender = true
+// }
