@@ -6,19 +6,18 @@ import styled from "@emotion/styled";
 import { Typography } from "antd";
 import { useProjects } from "utils/project";
 import { useUsers } from "utils/user";
-import { useUrlQueryParam } from "utils/url";
+import { useProjectsSearchParams } from "./util";
+
+// 基本类型，组件状态可以放到依赖里，非组件状态的对象，绝不可以放到依赖里
 
 export const ProjectListScreen = () => {
-  // 基本类型，组件状态可以放到依赖里，非组件状态的对象，绝不可以放到依赖里
+  useDocumentTitle("项目列表", false);
 
   // const [keys, setKeys] = useState<("name" | "personId")[]>(['name', 'personId'])
-  const [param, setParam] = useUrlQueryParam(["name", "personId"]);
-  const debouncedParam = useDebounce(param, 200);
 
-  const { isLoading, error, data: list } = useProjects(debouncedParam);
+  const [param, setParam] = useProjectsSearchParams();
+  const { isLoading, error, data: list } = useProjects(useDebounce(param, 200));
   const { data: users } = useUsers();
-
-  useDocumentTitle("项目列表", false);
 
   return (
     <Container>
@@ -36,7 +35,7 @@ const Container = styled.div`
   padding: 3.2rem;
 `;
 
-ProjectListScreen.whyDidYouRender = false;
+ProjectListScreen.whyDidYouRender = true;
 
 // class Test extends React.Component<any, any> {
 //   static whyDidYouRender = true
