@@ -34,9 +34,9 @@ export const IdSelect = (props: IdSelectProps) => {
         <Select.Option value={0}>{defaultOptionName}</Select.Option>
       ) : null}
       {options?.map((option) => (
-        <Select key={option.id} value={option.id}>
+        <Select.Option key={option.id} value={option.id}>
           {option.name}
-        </Select>
+        </Select.Option>
       ))}
     </Select>
   );

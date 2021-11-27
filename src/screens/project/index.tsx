@@ -9,7 +9,8 @@ export const ProjectScreen = () => {
       <Link to={"kanban"}>看版</Link>
       <Link to={"epic"}>任务组</Link>
       <Routes>
-        <Route path={"/"} element={<Navigate to={"kanban"} />} />
+        {/* 添加replace，不然后退不了 */}
+        <Route path={"*"} element={<Navigate replace to={"kanban"} />} />
         {/* /projects/:projectId/kanban */}
         <Route path={"kanban"} element={<KanbanScreen />} />
         {/* /projects/:projectId/epic */}
