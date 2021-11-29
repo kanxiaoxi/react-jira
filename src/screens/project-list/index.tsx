@@ -3,7 +3,7 @@ import { useDebounce, useDocumentTitle } from "utils";
 import { List } from "./list";
 import { SearchPanel } from "./search-panel";
 import styled from "@emotion/styled";
-import { Button, Typography } from "antd";
+import { Typography } from "antd";
 import { useProjects } from "utils/project";
 import { useUsers } from "utils/user";
 import { useProjectsSearchParams } from "./util";
@@ -11,9 +11,7 @@ import { Row } from "components/lib";
 
 // 基本类型，组件状态可以放到依赖里，非组件状态的对象，绝不可以放到依赖里
 
-export const ProjectListScreen = (props: {
-  setProjectModalOpen: (isOpen: boolean) => void;
-}) => {
+export const ProjectListScreen = (props: { projectButton: JSX.Element }) => {
   useDocumentTitle("项目列表", false);
 
   // const [keys, setKeys] = useState<("name" | "personId")[]>(['name', 'personId'])
@@ -31,16 +29,14 @@ export const ProjectListScreen = (props: {
     <Container>
       <Row between={true}>
         <h1>项目列表</h1>
-        <Button onClick={() => props.setProjectModalOpen(true)}>
-          创建项目
-        </Button>
+        {props.projectButton}
       </Row>
       <SearchPanel users={users || []} param={param} setParam={setParam} />
       {error ? (
         <Typography.Text type={"danger"}>{error.message}</Typography.Text>
       ) : null}
       <List
-        setProjectModalOpen={props.setProjectModalOpen}
+        projectButton={props.projectButton}
         refresh={retry}
         users={users || []}
         dataSource={list || []}
