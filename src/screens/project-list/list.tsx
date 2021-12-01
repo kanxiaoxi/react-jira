@@ -2,9 +2,11 @@ import { Dropdown, Table, TableProps, Menu } from "antd";
 import { ButtonNoPadding } from "components/lib";
 import { Pin } from "components/pin";
 import dayjs from "dayjs";
+import { useDispatch } from "react-redux";
 // react-router和react-router-dom的关系，类似于react和react-dom/react-native/react-v...
 import { Link } from "react-router-dom";
 import { useEditProject } from "utils/project";
+import { projectListActions } from "./project-list.slice";
 import { User } from "./search-panel";
 
 // TODO 把所有ID都改为number类型
@@ -24,6 +26,7 @@ interface ListProps extends TableProps<Project> {
 }
 
 export const List = ({ users, ...props }: ListProps) => {
+  const dispatch = useDispatch();
   const { mutate } = useEditProject();
   const pinProject = (id: number) => (pin: boolean) =>
     mutate({ id, pin }).then(props.refresh);
@@ -84,7 +87,16 @@ export const List = ({ users, ...props }: ListProps) => {
               <Dropdown
                 overlay={
                   <Menu>
-                    <Menu.Item key={"edit"}>{props.projectButton}</Menu.Item>
+                    <Menu.Item key={"edit"}>
+                      <ButtonNoPadding
+                        onClick={() =>
+                          dispatch(projectListActions.openProjectModal())
+                        }
+                        type={"link"}
+                      >
+                        编辑
+                      </ButtonNoPadding>
+                    </Menu.Item>
                   </Menu>
                 }
               >
