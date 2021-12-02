@@ -7,13 +7,15 @@ import { cleanObject, subset } from "utils";
  */
 export const useUrlQueryParam = <K extends string>(keys: K[]) => {
   const [searchParams] = useSearchParams();
+
   const setSearchParams = useSetUrlSearchParma();
   const [stateKeys] = useState(keys);
   return [
     useMemo(() => {
-      // keys.reduce((prev, key) => {
+      // return keys.reduce((prev, key) => {
       //   return { ...prev, [key]: searchParams.get(key) || "" };
-      // }, {}) as { [key in K]: string },
+      // }, {}) as { [key in K]: string }
+
       return subset(Object.fromEntries(searchParams), stateKeys) as {
         [key in K]: string;
       };
@@ -29,9 +31,10 @@ export const useSetUrlSearchParma = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   return (parmas: { [key in string]: unknown }) => {
     const o = cleanObject({
-      ...Object.fromEntries(searchParams),
+      // ...Object.fromEntries(searchParams), // 注释改行，否则创建项目，无法关闭Modal
       ...parmas,
     }) as URLSearchParamsInit;
+    console.log("here", Object.fromEntries(searchParams));
     return setSearchParams(o);
   };
 };

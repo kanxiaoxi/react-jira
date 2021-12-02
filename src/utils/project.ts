@@ -1,54 +1,96 @@
-import { useCallback, useEffect } from "react";
+// import { useCallback, useEffect } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Project } from "screens/project-list/list";
-import { cleanObject } from "utils";
+// import { cleanObject } from "utils";
 import { useHttp } from "./http";
-import { useAsync } from "./use-async";
+// import { useAsync } from "./use-async";
 
 export const useProjects = (param?: Partial<Project>) => {
-  const { run, ...result } = useAsync<Project[]>();
   const client = useHttp();
-
-  const fetchProjects = useCallback(
-    () => client("projects", { data: cleanObject(param || {}) }),
-    [client, param]
+  // param变化，重新触发请求
+  // return useQuery<Project[],Error>(['projects',param],()=>client('projects', {data: param}))
+  return useQuery<Project[]>(["projects", param], () =>
+    client("projects", { data: param })
   );
-  useEffect(() => {
-    run(fetchProjects(), { retry: fetchProjects });
-  }, [param, run, fetchProjects]);
 
-  return result;
+  // const { run, ...result } = useAsync<Project[]>();
+  // const fetchProjects = useCallback(
+  //   () => client("projects", { data: cleanObject(param || {}) }),
+  //   [client, param]
+  // );
+  // useEffect(() => {
+  //   run(fetchProjects(), { retry: fetchProjects });
+  // }, [param, run, fetchProjects]);
+
+  // return result;
 };
 
 export const useEditProject = () => {
-  const { run, ...asyncResult } = useAsync();
   const client = useHttp();
-  const mutate = (params: Partial<Project>) => {
-    return run(
+  const queryClient = useQueryClient();
+  return useMutation(
+    (params: Partial<Project>) =>
       client(`projects/${params.id}`, {
-        data: params,
         method: "PATCH",
-      })
-    );
-  };
-  return {
-    mutate,
-    ...asyncResult,
-  };
+        data: params,
+      }),
+    {
+      // 刷新缓存
+      onSuccess: () => queryClient.invalidateQueries("projects"),
+    }
+  );
+
+  // const { run, ...asyncResult } = useAsync();
+  // const mutate = (params: Partial<Project>) => {
+  //   return run(
+  //     client(`projects/${params.id}`, {
+  //       data: params,
+  //       method: "PATCH",
+  //     })
+  //   );
+  // };
+  // return {
+  //   mutate,
+  //   ...asyncResult,
+  // };
 };
 
 export const useAddProject = () => {
-  const { run, ...asyncResult } = useAsync();
   const client = useHttp();
-  const mutate = (params: Partial<Project>) => {
-    return run(
-      client(`projects/${params.id}`, {
-        data: params,
+  const queryClient = useQueryClient();
+  return useMutation(
+    (params: Partial<Project>) =>
+      client(`projects`, {
         method: "POST",
-      })
-    );
-  };
-  return {
-    mutate,
-    ...asyncResult,
-  };
+        data: params,
+      }),
+    {
+      onSuccess: () => queryClient.invalidateQueries("projects"),
+    }
+  );
+  // const { run, ...asyncResult } = useAsync();
+  // const mutate = (params: Partial<Project>) => {
+  //   return run(
+  //     client(`projects/${params.id}`, {
+  //       data: params,
+  //       method: "POST",
+  //     })
+  //   );
+  // };
+  // return {
+  //   mutate,
+  //   ...asyncResult,
+  // };
+};
+
+export const useProject = (id?: number) => {
+  const client = useHttp();
+  return useQuery<Project>(
+    ["project", { id }],
+    () => client(`projects/${id}`),
+    {
+      // id为undefined时不触发请求
+      enabled: Boolean(id),
+    }
+  );
 };
