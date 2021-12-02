@@ -31,7 +31,7 @@ export const useSetUrlSearchParma = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   return (parmas: { [key in string]: unknown }) => {
     const o = cleanObject({
-      // ...Object.fromEntries(searchParams), // 注释改行，否则创建项目，无法关闭Modal
+      ...Object.fromEntries(searchParams), // 注释该行，否则创建项目，无法关闭Modal。已改用useSetUrlSearchParma钩子返回的方法修改url参数
       ...parmas,
     }) as URLSearchParamsInit;
     console.log("here", Object.fromEntries(searchParams));
