@@ -29,6 +29,10 @@ export const ProjectModal = () => {
     });
   };
 
+  const closeModal = () => {
+    form.resetFields();
+    close();
+  };
   const title = editingProject ? "编辑项目" : "创建项目";
 
   // 当editingProject, form改变时，表单重置
@@ -40,7 +44,7 @@ export const ProjectModal = () => {
     //  forceRender解决: Instance created by `useForm` is not connected to any Form element. Forget to pass `form` prop?
     <Drawer
       forceRender={true}
-      onClose={close}
+      onClose={closeModal}
       visible={projectModalOpen}
       width={"100%"}
     >
