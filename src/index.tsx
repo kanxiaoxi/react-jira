@@ -11,8 +11,8 @@ loadServer(() =>
   ReactDOM.render(
     <AppProviders>
       <React.StrictMode>
-        <DevTools />
         <App />
+        <DevTools />
       </React.StrictMode>
     </AppProviders>,
     document.getElementById("root")
