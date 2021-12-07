@@ -15,6 +15,8 @@ import { Task } from "types/task";
 import { Mark } from "components/mark";
 import { useDeleteKanban } from "utils/kanban";
 import { Row } from "components/lib";
+import { forwardRef } from "react";
+import { Drag, Drop, DropChild } from "components/drag-and-drop";
 
 const TaskTypeIcon = ({ id }: { id: number }) => {
   const { data: taskTypes } = useTasksTypes();
@@ -42,26 +44,47 @@ const TaskCard = ({ task }: { task: Task }) => {
   );
 };
 
-export const KanbanColumn = ({ kanban }: { kanban: Kanban }) => {
-  const [params] = useTasksSearchParams();
-  const { data: allTasks } = useTasks(params);
-  // 筛选出所属看板的tasks
-  const tasks = allTasks?.filter((task) => task.kanbanId === kanban.id);
-  return (
-    <Container>
-      <Row between={true}>
-        <h3>{kanban.name}</h3>
-        <More kanban={kanban} />
-      </Row>
-      <TasksContainer>
-        {tasks?.map((task) => (
-          <TaskCard task={task} />
-        ))}
-        <CreateTask kanbanId={kanban.id} />
-      </TasksContainer>
-    </Container>
-  );
-};
+// 暴露ref给父组件调用
+export const KanbanColumn = forwardRef<HTMLDivElement, { kanban: Kanban }>(
+  ({ kanban, ...props }, ref) => {
+    const [params] = useTasksSearchParams();
+    const { data: allTasks } = useTasks(params);
+    // 筛选出所属看板的tasks
+    const tasks = allTasks?.filter((task) => task.kanbanId === kanban.id);
+    return (
+      // Unable to find drag handle
+      <Container {...props} ref={ref}>
+        <Row between={true}>
+          <h3>{kanban.name}</h3>
+          <More kanban={kanban} key={kanban.id} />
+        </Row>
+        <TasksContainer>
+          <Drop
+            droppableId={String(kanban.id)}
+            type={"ROW"}
+            direction={"vertical"}
+          >
+            <DropChild style={{ minHeight: "5px" }}>
+              {tasks?.map((task, index) => (
+                <Drag
+                  key={task.id}
+                  index={index}
+                  draggableId={"task" + task.id}
+                >
+                  {/* 这里使用普通html元素接收ref，而不是forwardRef 转发ref 给函数组件*/}
+                  <div>
+                    <TaskCard key={task.id} task={task} />
+                  </div>
+                </Drag>
+              ))}
+            </DropChild>
+          </Drop>
+          <CreateTask kanbanId={kanban.id} />
+        </TasksContainer>
+      </Container>
+    );
+  }
+);
 
 export const Container = styled.div`
   min-width: 27rem;
