@@ -6,7 +6,7 @@ import { useSetUrlSearchParma } from "utils/url";
 import { useTasksSearchParams } from "./util";
 
 export const SearchPanel = () => {
-  const searchParams = useTasksSearchParams();
+  const [params, setParams] = useTasksSearchParams();
   const setSearchParams = useSetUrlSearchParma();
   const reset = () => {
     setSearchParams({
@@ -22,18 +22,18 @@ export const SearchPanel = () => {
       <Input
         style={{ width: "20rem" }}
         placeholder={"任务名"}
-        value={searchParams.name}
-        onChange={(evt) => setSearchParams({ name: evt.target.value })}
+        value={params.name}
+        onChange={(evt) => setParams({ ...params, name: evt.target.value })}
       />
       <UserSelect
         defaultOptionName={"经办人"}
-        value={searchParams.processorId}
-        onChange={(value) => setSearchParams({ processorId: value })}
+        value={params.processorId}
+        onChange={(value) => setParams({ ...params, processorId: value })}
       />
       <TaskTypeSelect
         defaultOptionName={"类型"}
-        value={searchParams.typeId}
-        onChange={(value) => setSearchParams({ typeId: value })}
+        value={params.typeId}
+        onChange={(value) => setParams({ ...params, typeId: value })}
       />
       <Button onClick={reset}>清除筛选器</Button>
     </Row>

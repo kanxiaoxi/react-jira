@@ -1,12 +1,13 @@
 import styled from "@emotion/styled";
 import { Spin } from "antd";
 import { ScreenContainer } from "components/lib";
-import { useDocumentTitle } from "utils";
+import { useDebounce, useDocumentTitle } from "utils";
 import { useKanbans } from "utils/kanban";
 import { useTasks } from "utils/task";
 import { CreateKanban } from "./create-kanban";
 import { KanbanColumn } from "./kanban-column";
 import { SearchPanel } from "./search-panel";
+import { TaskModal } from "./task-modal";
 import {
   useKanbansSearchParams,
   useProjectInUrl,
@@ -20,7 +21,8 @@ export const KanbanScreen = () => {
   const { data: kanbans, isLoading: kanbanIsLoading } = useKanbans(
     useKanbansSearchParams()
   );
-  const { isLoading: taskIsLoading } = useTasks(useTasksSearchParams());
+  const [params] = useTasksSearchParams();
+  const { isLoading: taskIsLoading } = useTasks(useDebounce(params, 200));
   const isLoading = taskIsLoading || kanbanIsLoading;
 
   return (
@@ -37,6 +39,7 @@ export const KanbanScreen = () => {
           <CreateKanban />
         </ColumnContainer>
       )}
+      <TaskModal />
     </ScreenContainer>
   );
 };

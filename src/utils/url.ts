@@ -34,7 +34,7 @@ export const useSetUrlSearchParma = () => {
       ...Object.fromEntries(searchParams), // 注释该行，否则创建项目，无法关闭Modal。已改用useSetUrlSearchParma钩子返回的方法修改url参数
       ...parmas,
     }) as URLSearchParamsInit;
-    console.log("here", Object.fromEntries(searchParams));
+    // console.log("here", Object.fromEntries(searchParams));
     return setSearchParams(o);
   };
 };
