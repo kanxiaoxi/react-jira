@@ -33,4 +33,4 @@ export const useTasksSearchParams = () => {
   );
 };
 
-export const useTasksQueryKey = () => ["kanbans", useTasksSearchParams()];
+export const useTasksQueryKey = () => ["tasks", useTasksSearchParams()];
