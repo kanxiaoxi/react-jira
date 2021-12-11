@@ -1,4 +1,6 @@
 import { QueryKey, useQueryClient } from "react-query";
+import { Task } from "types/task";
+import { reorder } from "./reorder";
 
 /**
  * 生产useMutation的配置项
@@ -46,5 +48,21 @@ export const useEditConfig = (queryKey: QueryKey) =>
 export const useAddConfig = (queryKey: QueryKey) =>
   useConfig(queryKey, (target, old) => (old ? [...old, target] : []));
 
-export const useReorderConfig = (queryKey: QueryKey) =>
-  useConfig(queryKey, (target, old) => old || []);
+export const useReorderKanbanConfig = (queryKey: QueryKey) =>
+  useConfig(queryKey, (target, old) => {
+    // console.log({list: old, ...target});
+
+    return reorder({ list: old, ...target });
+  });
+
+export const useReorderTaskConfig = (queryKey: QueryKey) =>
+  useConfig(queryKey, (target, old) => {
+    // 乐观更新task列表中的位置
+    const orderedList = reorder({ list: old, ...target }) as Task[];
+    // 由于task列表排序还可能跨越kanban, 所以还要考虑更新其kanbanId
+    return orderedList.map((item) =>
+      item.id === target.fromId
+        ? { ...item, kanbanId: target.toKanbanId }
+        : item
+    );
+  });

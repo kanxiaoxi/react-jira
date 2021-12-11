@@ -92,11 +92,11 @@ export const useDragEnd = () => {
         }
         const type = destination.index > source.index ? "after" : "before";
         console.log({ fromId, referenceId: toId, type });
+        // 使用带乐观更新的看板排序
         reorderKanban({ fromId, referenceId: toId, type });
       }
       // 任务排序
       if (type === "ROW") {
-        console.log(source, destination);
         const fromKanbanId = +source.droppableId;
         const toKanbanId = +destination.droppableId;
 
@@ -105,7 +105,6 @@ export const useDragEnd = () => {
         //   return
         // }
 
-        console.log("eee");
         // 过滤出所属看板的tasks，并通过索引区分是源task和目的task
         const fromTask = allTasks?.filter(
           (task) => task.kanbanId === fromKanbanId
@@ -116,6 +115,7 @@ export const useDragEnd = () => {
         if (fromTask?.id === toTask?.id) {
           return;
         }
+        // 使用带乐观更新的任务排序
         reorderTask({
           fromId: fromTask?.id,
           referenceId: toTask?.id,
