@@ -91,7 +91,7 @@ export const useDragEnd = () => {
           return;
         }
         const type = destination.index > source.index ? "after" : "before";
-        console.log({ fromId, referenceId: toId, type });
+        // console.log({ fromId, referenceId: toId, type });
         // 使用带乐观更新的看板排序
         reorderKanban({ fromId, referenceId: toId, type });
       }

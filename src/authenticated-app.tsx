@@ -102,7 +102,13 @@ const User = () => {
           <Menu.Item key={"logout"}>
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             {/* <a onClick={logout}>登出</a> */}
-            <Button type={"link"} onClick={logout}>
+            <Button
+              type={"link"}
+              onClick={() => {
+                logout();
+                window.history.pushState(null, "", window.location.origin);
+              }}
+            >
               登出
             </Button>
           </Menu.Item>
