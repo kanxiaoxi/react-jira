@@ -1,6 +1,7 @@
 // import { useCallback, useEffect } from "react";
 import { QueryKey, useMutation, useQuery } from "react-query";
 import { Project } from "types/project";
+import { cleanObject } from "utils";
 // import { useProjectsSearchParams } from "screens/project-list/util";
 // import { cleanObject } from "utils";
 import { useHttp } from "./http";
@@ -15,7 +16,7 @@ export const useProjects = (param?: Partial<Project>) => {
   const client = useHttp();
   // param变化，重新触发请求
   // return useQuery<Project[],Error>(['projects',param],()=>client('projects', {data: param}))
-  return useQuery<Project[]>(["projects", param], () =>
+  return useQuery<Project[]>(["projects", cleanObject(param)], () =>
     client("projects", { data: param })
   );
 

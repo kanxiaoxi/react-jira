@@ -4,12 +4,7 @@ import { useAuth } from "context/auth-context";
 import { ProjectListScreen } from "screens/project-list";
 import { ReactComponent as SoftwareLogo } from "assets/software-logo.svg";
 import { Button, Dropdown, Menu } from "antd";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import { ProjectScreen } from "screens/project";
 import { ProjectModal } from "screens/project-list/project-modal";
@@ -22,20 +17,15 @@ export const AuthenticatedApp = () => {
 
   return (
     <Container>
-      <Router>
-        <PageHeader />
-        <Main>
-          <Routes>
-            <Route path={"/"} element={<Navigate replace to={"/projects"} />} />
-            <Route path={"/projects"} element={<ProjectListScreen />} />
-            <Route
-              path={"/projects/:projectId/*"}
-              element={<ProjectScreen />}
-            />
-          </Routes>
-        </Main>
-        <ProjectModal />
-      </Router>
+      <PageHeader />
+      <Main>
+        <Routes>
+          <Route path={"/"} element={<Navigate replace to={"/projects"} />} />
+          <Route path={"/projects"} element={<ProjectListScreen />} />
+          <Route path={"/projects/:projectId/*"} element={<ProjectScreen />} />
+        </Routes>
+      </Main>
+      <ProjectModal />
     </Container>
   );
 };
