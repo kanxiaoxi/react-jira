@@ -6,15 +6,18 @@ import reportWebVitals from "./reportWebVitals";
 import { DevTools, loadServer } from "jira-dev-tool";
 import "antd/dist/antd.less";
 import { AppProviders } from "context";
+import { Profiler } from "components/profiler";
 
 loadServer(() =>
   ReactDOM.render(
-    <AppProviders>
-      <React.StrictMode>
-        <App />
-        <DevTools />
-      </React.StrictMode>
-    </AppProviders>,
+    <React.StrictMode>
+      <Profiler id={"Root App"} phases={["mount"]}>
+        <AppProviders>
+          <App />
+          <DevTools />
+        </AppProviders>
+      </Profiler>
+    </React.StrictMode>,
     document.getElementById("root")
   )
 );
