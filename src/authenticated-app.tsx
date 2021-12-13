@@ -16,7 +16,7 @@ import { ProjectModal } from "screens/project-list/project-modal";
 import { ProjectPopover } from "components/project-popover";
 import { UserPopover } from "components/user-popover";
 
-export const AuthenticatedApp = () => {
+const AuthenticatedApp = () => {
   // const [projectModalOpen, setProjectModalOpen] = useState(false);
   // 使用URL保存全局状态
 
@@ -39,7 +39,7 @@ export const AuthenticatedApp = () => {
     </Container>
   );
 };
-
+export default AuthenticatedApp;
 // const PageHeader = styled.header`
 //   height: 6rem;
 //   background: gray;
